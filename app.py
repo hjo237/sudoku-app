@@ -7,6 +7,8 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
+from solver import *
+from sudoku_cv import *
 
 # instantiate the app
 app = Flask(__name__)
@@ -38,46 +40,19 @@ def home():
     return render_template('homepage.html')
 
 
-@app.route('/read')
-def read_review():
-    """
-    Route for GET requests to the reading review page.
-    Displays all reviews that customers wrote.
-    """
-    docs = db.reviews.find({}).sort("created_at", -1) # sort in descending order of created_at timestamp
-    return render_template('read_review.html', docs=docs) # render the read template
-
-
-@app.route('/createreview')
-def create_review():
+@app.route('/upload')
+def upload():
     """
     Route for GET requests to the create page.
     Displays a form users can fill out to create a new review.
     """
-    return render_template('review.html') # render the create template
+    image = request.form['myImage']
+    
+    sudoku = predict_board(image)
 
+    solved = solve(sudoku)
 
-@app.route('/createreview', methods=['POST'])
-def create_post():
-    """
-    Route for POST requests to the create page.
-    Accepts the form submission data for a new review and saves the review to the database.
-    """
-    name = request.form['fname']
-    review = request.form['fmessage']
-    rating = request.form['frating']
-
-
-    # create a new document with the data the user entered
-    doc = {
-        "name": name,
-        "review": review, 
-        "rating": rating,
-        "created_at": datetime.datetime.utcnow()
-    }
-    db.reviews.insert_one(doc) # insert a new document
-
-    return redirect(url_for('read_review')) # tell the browser to make a request for the /read route
+    return render_template('input.html'), solved  # render the create template
 
 
 @app.route('/edit/<mongoid>')
