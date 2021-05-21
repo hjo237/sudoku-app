@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ellen's Kitchen </title>
+    <title>Sudoku Solver</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -10,20 +10,17 @@
   <body>
     <div class="container">
       <header>
-        <h1>Ellen's Kitchen</h1>
+        <h1>Sudoku Solver</h1>
         <p>
           <a href="{{ url_for('home')}}">Home</a> |
-          <a href="{{ url_for('menu')}}">View menu</a> |
-          <a href="{{ url_for('hours')}}">View opening hours</a> |
-          <a href="{{ url_for('read_review')}}">Read Reviews</a> |
-          <a href="{{ url_for('create_review')}}">Write a reivew</a>
+          <a href="{{ url_for('input')}}">Upload picture</a> 
         </p>
       </header>
       <main>{% block container %} {% endblock %}</main>
       <footer>
         <p>
-          The source code for our restaurant's web app is 
-          <a href="https://github.com/database-design-assignments/web-app-ellen"
+          The source code for our sudoku web app is 
+          <a href="https://github.com/hjo237/sudoku-app"
             >available on Github</a
           >.
         </p>
