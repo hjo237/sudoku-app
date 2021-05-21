@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<h2>Welcome!</h2>
+<p>This is the homepage of Ellen's Kitchen. 
+    <ul>
+        <li><a href="{{ url_for('menu')}}">Click here to check the menus we have!</a></li>
+        <li><a href="{{ url_for('hours')}}">Click here to see when we are open!</a></li>
+        <li><a href="{{ url_for('create_review')}}">Let us know what you think! Write your thoughts and feedbacks.</a></li>
+        <li><a href="{{ url_for('read_review')}}">Want to know what others think about us? Click here to see reviews. </a></li>
+    </ul>
+</p>
+{% endblock %}
