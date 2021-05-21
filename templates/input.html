@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block container %}
+<h2>Upload your sudoku image.</h2>
+<p>Make sure the image is valid and solvable. </p>
+<form method="POST" action="{{ url_for('create_post') }}">
+  <p>Upload here: <input type="file" name="myImage" accept="image/png, image/jpg, image/jpeg" /><br /></p>
+  <p>
+    <a href="{{ url_for('home')}}">Cancel</a>
+    <input type="submit" name="post-btn" value="Post" />
+  </p>
+
+</form>
+{% endblock %}
