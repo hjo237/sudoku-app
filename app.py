@@ -7,7 +7,7 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
-from solver import *
+import solver
 from sudoku_cv import *
 
 # instantiate the app
@@ -46,9 +46,9 @@ def upload():
     Route for GET requests to the create page.
     Displays a form users can fill out to create a new review.
     """
-    image = request.form['myImage']
-    
-    sudoku = predict_board(image)
+    image = request.files.get("myImage")
+
+    sudoku = predict_board(image) 
 
     solved = solve(sudoku)
 
