@@ -7,8 +7,8 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
-import solver
-from sudoku_cv import *
+#import solver
+#from sudoku_cv import *
 
 # instantiate the app
 app = Flask(__name__)
@@ -53,7 +53,7 @@ def upload():
 
     #solved = solve(sudoku)
 
-    return render_template('input.html'), solved  # render the create template
+    return render_template('input.html') #, solved  # render the create template
 
 @app.route('/createreview', methods=['POST'])
 def create_post():
