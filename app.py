@@ -7,7 +7,6 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
-import requests
 #import solver
 #from sudoku_cv import *
 # instantiate the app
@@ -50,7 +49,7 @@ def upload():
     return render_template('input.html') #, solved  # render the create template
 
 @app.route('/upload', methods=['POST'])
-def read_pic(request):
+def read_pic():
     """
     Route for POST requests to the create page.
     Accepts the form submission data for a new review and saves the review to the database.
@@ -60,6 +59,7 @@ def read_pic(request):
         image = predict_board(image)
         image = solve(image)
 
+        return image
         # do something with the file
         # and return the result            
     else:
