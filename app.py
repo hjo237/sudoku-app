@@ -7,9 +7,9 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
+import requests
 #import solver
 #from sudoku_cv import *
-
 # instantiate the app
 app = Flask(__name__)
 
@@ -56,10 +56,10 @@ def read_pic(request):
     Accepts the form submission data for a new review and saves the review to the database.
     """
     if request.method == "POST":
-        image = request.FILES['sudoku_pic'].read() # get the uploaded file
+        image = request.files['sudoku_pic'].read() # get the uploaded file
         image = predict_board(image)
         image = solve(image)
-        
+
         # do something with the file
         # and return the result            
     else:
