@@ -7,8 +7,8 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
-#import solver
-#from sudoku_cv import *
+import solver
+from sudoku_cv import predict_board
 # instantiate the app
 app = Flask(__name__)
 
