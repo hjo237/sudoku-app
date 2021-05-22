@@ -46,36 +46,26 @@ def upload():
     Route for GET requests to the create page.
     Displays a form users can fill out to create a new review.
     """
-    #image = request.files.get("myImage")
-
-    #sudoku = predict_board(image) 
-    #print(sudoku)
-
-    #solved = solve(sudoku)
 
     return render_template('input.html') #, solved  # render the create template
 
-@app.route('/createreview', methods=['POST'])
-def create_post():
+@app.route('/upload', methods=['POST'])
+def read_pic(request):
     """
     Route for POST requests to the create page.
     Accepts the form submission data for a new review and saves the review to the database.
     """
-    name = request.form['fname']
-    review = request.form['fmessage']
-    rating = request.form['frating']
+    if request.method == "POST":
+        image = request.FILES['sudoku_pic'].read() # get the uploaded file
+        image = predict_board(image)
+        image = solve(image)
+        
+        # do something with the file
+        # and return the result            
+    else:
+        return render(request, 'input.html')
 
-
-    # create a new document with the data the user entered
-    doc = {
-        "name": name,
-        "review": review, 
-        "rating": rating,
-        "created_at": datetime.datetime.utcnow()
-    }
-    db.reviews.insert_one(doc) # insert a new document
-
-    return redirect(url_for('read_review')) # tell the browser to make a request for the /read route
+ # tell the browser to make a request for the /read route
 
 @app.route('/edit/<mongoid>')
 def edit_review(mongoid):

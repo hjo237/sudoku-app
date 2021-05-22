@@ -1,13 +1,14 @@
 {% extends 'base.html' %} {% block container %}
 <h2>Upload your sudoku image.</h2>
 <p>Make sure the image is valid and solvable. </p>
-<form method="post" enctype="multipart/form-data">
+<form method="POST" action="{{ url_for('read_pic') }}" enctype="multipart/form-data">
   <div>
-    <label for="sudoku_pic">Choose file to upload</label>
+    <label for="sudoku_pic">Choose file to upload: </label>
     <input type="file" id="sudoku_pic" name="sudoku_pic"
           accept=".jpg, .jpeg, .png">
   </div>
-  <div>
-    <button>Submit</button>
-  </div>
+  <p>
+    <a href="{{ url_for('home')}}">Cancel</a>
+    <input type="submit" name="post-btn" value="Post" />
+  </p>
 {% endblock %}
