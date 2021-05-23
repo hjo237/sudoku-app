@@ -1,14 +1,21 @@
-# from sudoku_cv import predict_board
-import time
+# solver.py
+from sudoku_cv_picprocess import predict_board
+import copy
 
-
-def solve(bo):
+def solve(bo, ans):
     find = find_empty(bo)
     if not find:
-        return True
+        bo1 = copy.deepcopy(bo)
+        ans.append(bo1)
     else:
         row, col = find
-
+        for i in range(1,10):
+            if valid(bo, i, (row, col)):
+                bo[row][col] = i
+                solve(bo,ans)
+            bo[row][col] = 0
+            
+    '''
     set = [[1,2,3,4,5,6,7,8,9], 
             [2,3,4,5,6,7,8,9,1], 
             [3,4,5,6,7,8,9,1,2], 
@@ -18,21 +25,7 @@ def solve(bo):
             [7,8,9,1,2,3,4,5,6],
             [8,9,1,2,3,4,5,6,7],
             [9,1,2,3,4,5,6,7,8]]
-    
-    solution_set = []
-    for lst in set:
-        for i in lst:
-            if valid(bo, i, (row, col)):
-                bo[row][col] = i
-
-                if solve(bo):
-                    solution_set.append(bo)
-                    
-                    return True
-
-                bo[row][col] = 0
-     
-    return False
+    '''
 
 
 def valid(bo, num, pos):
@@ -121,19 +114,21 @@ board3 = [[2,8,6,1,5,9,7,4,3],
         [1,3,4,5,9,7,6,8,2],
         [9,7,2,4,8,6,3,5,1]]
 
-#board = predict_board('sudoku_original.jpeg')
+board = predict_board('sudoku_original.jpeg', 'PytorchModel_AddFonts_space_duplicate.pt')
 if __name__ == '__main__':
-    print_board(board)
+    #print_board(board3)
 
     print("________________________\n")
+    ans = []
+    solve(board,ans)
+    print(ans[0])
+    size = len(ans)
 
-    if solve(board):
-        print_board(board)
-
-    else:
+    if size == 0:
         print('No solution')
-
-start_time = time.time()
-print("--- %s seconds ---" % (time.time() - start_time))
+    else:
+        for b in ans:
+            print_board(b)
+            print("________________________\n")
 
 

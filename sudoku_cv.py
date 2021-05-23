@@ -302,3 +302,4 @@ def predict_board(path):
 
 	return grid
 
+print(predict_board('sudoku_original.jpeg'))

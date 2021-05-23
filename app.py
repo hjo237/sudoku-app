@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, request, redirect, url_for, make_response, send_from_directory
 from markupsafe import escape
 import pymongo
 import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
+#from Werkzeug import secure_filename
+from sudoku_cv_picprocess import predict_board
 import solver
-from sudoku_cv import predict_board
 # instantiate the app
 app = Flask(__name__)
+app.config['UPLOAD_PATH'] = 'uploads'
 
 # load credentials and configuration options from .env file
 # if you do not yet have a file named .env, make one based on the template in env.example
@@ -48,88 +50,28 @@ def upload():
 
     return render_template('input.html') #, solved  # render the create template
 
-@app.route('/upload', methods=['POST'])
-def read_pic():
-    """
-    Route for POST requests to the create page.
-    Accepts the form submission data for a new review and saves the review to the database.
-    """
-    if request.method == "POST":
-        image = request.files['sudoku_pic'].read() # get the uploaded file
-        image = predict_board(image)
-        image = solve(image)
-
-        return image
-        # do something with the file
-        # and return the result            
-    else:
-        return render(request, 'input.html')
+@app.route('/uploading', methods=['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+        img = request.files['sudoku_pic']
+        img.save(img.filename)
+ 
+        return redirect(url_for('solve', img = img.filename))
 
  # tell the browser to make a request for the /read route
 
-@app.route('/edit/<mongoid>')
-def edit_review(mongoid):
+@app.route('/solve/<img>')
+def solve(img):
     """
     Route for GET requests to the edit page.
     Displays a form users can fill out to edit an existing record.
     """
-    doc = db.reviews.find_one({"_id": ObjectId(mongoid)})
-    return render_template('edit_review.html', mongoid=mongoid, doc=doc) # render the edit template
+    read = predict_board(img, 'PytorchModel_AddFonts_space_duplicate.pt')
+    ans = []
+    solver.solve(read, ans)
 
+    return render_template('grid.html', read = ans[0]) # render the edit template
 
-@app.route('/edit/<mongoid>', methods=['POST'])
-def edit_post(mongoid):
-    """
-    Route for POST requests to the edit page.
-    Accepts the form submission data for the specified review and updates the review in the database.
-    """
-    name = request.form['fname']
-    review = request.form['fmessage']
-    rating = request.form['frating']
-
-    doc = {
-        # "_id": ObjectId(mongoid), 
-        "name": name, 
-        "review": review, 
-        "rating": rating,
-        "created_at": datetime.datetime.utcnow()
-    }
-
-    db.reviews.update_one(
-        {"_id": ObjectId(mongoid)}, # match criteria
-        { "$set": doc }
-    )
-
-    return redirect(url_for('read_review')) # tell the browser to make a request for the /read route
-
-
-
-@app.route('/delete/<mongoid>')
-def delete_review(mongoid):
-    """
-    Route for GET requests to the delete page.
-    Deletes the specified record from the database, and then redirects the browser to the read page.
-    """
-    db.reviews.delete_one({"_id": ObjectId(mongoid)})
-    return redirect(url_for('read_review')) # tell the web browser to make a request for the /read route.
-
-
-@app.route('/menu')
-def menu():
-    """
-    Route for GET requests to the read page.
-    Displays menu for the user to give information.
-    """
-    return render_template('menu.html')
-
-
-@app.route('/hours')
-def hours():
-    """
-    Route for GET requests to the read page.
-    Displays opening hours for the user to give information.
-    """
-    return render_template('hours.html')
 
 
 @app.route('/webhook', methods=['POST'])
