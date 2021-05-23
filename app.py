@@ -7,22 +7,13 @@ import datetime
 from bson.objectid import ObjectId
 import os
 import subprocess
-#from Werkzeug import secure_filename
 from sudoku_cv_picprocess import predict_board
 import solver
 # instantiate the app
 app = Flask(__name__)
 app.config['UPLOAD_PATH'] = 'uploads'
 
-# load credentials and configuration options from .env file
-# if you do not yet have a file named .env, make one based on the template in env.example
 
-# turn on debugging if in development mode
-'''
-if app.config['FLASK_ENV'] == 'development':
-    # turn on debugging, if in development
-    app.debug = True # debug mnode
-'''
 # set up the routes
 
 @app.route('/')
