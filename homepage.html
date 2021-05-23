@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<h2>Welcome!</h2>
+<p>This page provides a solution for unsolved sudoku puzzle. 
+    <ul>
+        <li><a href="{{ url_for('upload')}}">Click here to upload your sudoku image!</a></li>
+    </ul>
+</p>
+{% endblock %}
